@@ -2,6 +2,7 @@ package com.example.a.demotest.ui.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 
@@ -14,17 +15,20 @@ import java.util.List;
 
 public class downloadpicActivity extends AppCompatActivity {
     private List<Picture> picturesList = new ArrayList<>();
+    private PictureAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loadpic);
-        initPicture();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_view);
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
-        PictureAdapter adapter = new PictureAdapter(picturesList);
+        adapter = new PictureAdapter(picturesList, this);
         recyclerView.setAdapter(adapter);
+
+
+        initPicture();
     }
 
     private void initPicture() {
@@ -42,5 +46,6 @@ public class downloadpicActivity extends AppCompatActivity {
             Picture image6 = new Picture("NO.6", R.drawable.x6);
             picturesList.add(image6);
         }
+        adapter.notifyDataSetChanged();
     }
 }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.example.a.demotest.bean.Picture;
 import com.example.a.demotest.R;
 
@@ -19,31 +20,11 @@ import java.util.List;
 public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.ViewHolder> {
     private List<Picture> mPictureList;
     private Context mContext;
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView picture_Image;
-        TextView pictureName;
-        View pictureView;
-
-        public ViewHolder(View view) {
-            super(view);
-            pictureView = view;
-            pictureName = (TextView) view.findViewById(R.id.name);
-            picture_Image = view.findViewById(R.id.image1);
-        }
-    }
-
-    public PictureAdapter(List<Picture> pictureList) {
-        mPictureList = pictureList;
-    }
+    private RequestManager requestManager;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final ImageView picture_Image;
-
-        if (mContext == null) {
-            mContext = parent.getContext();
-        }
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.picture_item, parent, false);
         final ViewHolder holder = new ViewHolder(view);
         picture_Image = view.findViewById(R.id.image1);
@@ -66,7 +47,7 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.ViewHold
         Picture picture = mPictureList.get(position);
         //holder.picture_Image.setImageResource(picture.getImageId());
         holder.pictureName.setText(picture.getName());
-        Glide.with(mContext).load(picture.getImageId()).into(holder.picture_Image);
+        requestManager.load(picture.getImageId()).into(holder.picture_Image);
     }
 
     @Override
@@ -74,4 +55,22 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.ViewHold
         return mPictureList.size();
     }
 
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView picture_Image;
+        TextView pictureName;
+        View pictureView;
+
+        public ViewHolder(View view) {
+            super(view);
+            pictureView = view;
+            pictureName = (TextView) view.findViewById(R.id.name);
+            picture_Image = view.findViewById(R.id.image1);
+        }
+    }
+
+    public PictureAdapter(List<Picture> pictureList, Context context) {
+        mPictureList = pictureList;
+        mContext = context;
+        requestManager = Glide.with(mContext);
+    }
 }
